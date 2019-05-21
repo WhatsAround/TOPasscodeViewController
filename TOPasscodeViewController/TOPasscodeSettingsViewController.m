@@ -81,10 +81,10 @@ const CGFloat kTOPasscodeKeypadMaxHeight = 330.0f;
 - (void)setUp
 {
     self.mTitle = NSLocalizedString(@"Enter Passcode", @"");
-    self.mCurrentPasscodeTitle = NSLocalizedString(@"Enter your passcode", @"");
-    self.mNewPasscodeTitle = NSLocalizedString(@"Enter a new passcode", @"");
-    self.mConfirmPasscodeTitle = NSLocalizedString(@"Confirm new passcode", @"");
-    self.mPasscodeNotMatchTitle = NSLocalizedString(@"Passcodes didn't match. Try again.", @"");
+    self.mCurrentPasscodeTitle = NSLocalizedString(@"Enter your current pin", @"");
+    self.mNewPasscodeTitle = NSLocalizedString(@"Enter a new pin", @"");
+    self.mConfirmPasscodeTitle = NSLocalizedString(@"Confirm new pin", @"");
+    self.mPasscodeNotMatchTitle = NSLocalizedString(@"Pin didn't match! Try again", @"");
     self.mPasscodeOptionsTitle = NSLocalizedString(@"Passcode Options", @"");
     _isAppearPasscodeOptions = NO;
     _failedPasscodeAttemptCount = 0;
