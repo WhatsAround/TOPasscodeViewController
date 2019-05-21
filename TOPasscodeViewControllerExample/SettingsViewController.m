@@ -174,6 +174,12 @@ TOPasscodeSettingsViewControllerDelegate>
         settingsController.passcodeType = self.passcodeType;
         settingsController.delegate = self;
         settingsController.requireCurrentPasscode = YES;
+        //settingsController.mTitle = @"Title";
+        //settingsController.mCurrentPasscodeTitle = @"CurrentPasscode";
+        //settingsController.mNewPasscodeTitle = @"NewPasscode";
+        //settingsController.mConfirmPasscodeTitle = @"ConfirmPasscode";
+        //settingsController.mPasscodeNotMatchTitle = @"PasscodeNotMatch";
+        //settingsController.isAppearPasscodeOptions = YES;
         [self.navigationController pushViewController:settingsController animated:YES];
     }
     else if (indexPath.section == 2) {

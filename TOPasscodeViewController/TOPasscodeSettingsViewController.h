@@ -88,6 +88,17 @@ NS_ASSUME_NONNULL_BEGIN
 /** If set, the view controller will disable input until this date time has been reached */
 @property (nonatomic, strong, nullable) NSDate *disabledInputDate;
 
+/** Determines whether passcode options appear. (Default is NO) */
+@property (nonatomic, assign) BOOL isAppearPasscodeOptions;
+    
+/** The input type of the passcode */
+@property (nonatomic, assign) NSString *mTitle;
+@property (nonatomic, assign) NSString *mCurrentPasscodeTitle;
+@property (nonatomic, assign) NSString *mNewPasscodeTitle;
+@property (nonatomic, assign) NSString *mConfirmPasscodeTitle;
+@property (nonatomic, assign) NSString *mPasscodeNotMatchTitle;
+@property (nonatomic, assign) NSString *mPasscodeOptionsTitle;
+    
 /*
  Create a new instance with the desird light or dark style
 

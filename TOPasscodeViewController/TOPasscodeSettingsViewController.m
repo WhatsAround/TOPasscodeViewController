@@ -80,6 +80,13 @@ const CGFloat kTOPasscodeKeypadMaxHeight = 330.0f;
 
 - (void)setUp
 {
+    self.mTitle = NSLocalizedString(@"Enter Passcode", @"");
+    self.mCurrentPasscodeTitle = NSLocalizedString(@"Enter your passcode", @"");
+    self.mNewPasscodeTitle = NSLocalizedString(@"Enter a new passcode", @"");
+    self.mConfirmPasscodeTitle = NSLocalizedString(@"Confirm new passcode", @"");
+    self.mPasscodeNotMatchTitle = NSLocalizedString(@"Passcodes didn't match. Try again.", @"");
+    self.mPasscodeOptionsTitle = NSLocalizedString(@"Passcode Options", @"");
+    _isAppearPasscodeOptions = NO;
     _failedPasscodeAttemptCount = 0;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChangeFrame:) name:UIKeyboardWillChangeFrameNotification object:nil];
 }
@@ -96,7 +103,7 @@ const CGFloat kTOPasscodeKeypadMaxHeight = 330.0f;
 
     __weak typeof(self) weakSelf = self;
 
-    self.title = NSLocalizedString(@"Enter Passcode", @"");
+    self.title = self.mTitle;
 
     // Create container view
     self.containerView = [[UIView alloc] initWithFrame:CGRectZero];
@@ -109,7 +116,7 @@ const CGFloat kTOPasscodeKeypadMaxHeight = 330.0f;
     self.titleLabel.font = [UIFont systemFontOfSize:17.0f];
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
     self.titleLabel.textColor = [UIColor blackColor];
-    self.titleLabel.text = @"Enter your passcode";
+    self.titleLabel.text = self.mCurrentPasscodeTitle;
     self.titleLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
     [self.titleLabel sizeToFit];
     [self.containerView addSubview:self.titleLabel];
@@ -136,7 +143,7 @@ const CGFloat kTOPasscodeKeypadMaxHeight = 330.0f;
 
     // Create error label view
     self.errorLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    self.errorLabel.text = NSLocalizedString(@"Passcodes didn't match. Try again.", @"");
+    self.errorLabel.text = self.mPasscodeNotMatchTitle;
     self.errorLabel.textAlignment = NSTextAlignmentCenter;
     self.errorLabel.font = [UIFont systemFontOfSize:15.0f];
     self.errorLabel.numberOfLines = 0;
@@ -146,7 +153,7 @@ const CGFloat kTOPasscodeKeypadMaxHeight = 330.0f;
 
     // Create Options button
     self.optionsButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.optionsButton setTitle:NSLocalizedString(@"Passcode Options", @"") forState:UIControlStateNormal];
+    [self.optionsButton setTitle:self.mPasscodeOptionsTitle forState:UIControlStateNormal];
     self.optionsButton.titleLabel.font = [UIFont systemFontOfSize:15.0f];
     [self.optionsButton sizeToFit];
     [self.optionsButton addTarget:self action:@selector(optionsCodeButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
@@ -178,6 +185,8 @@ const CGFloat kTOPasscodeKeypadMaxHeight = 330.0f;
 
     // Apply light/dark mode
     [self applyThemeForStyle:self.style];
+    
+    self.optionsButton.hidden = !self.isAppearPasscodeOptions;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -195,7 +204,10 @@ const CGFloat kTOPasscodeKeypadMaxHeight = 330.0f;
     BOOL variableSizePasscode = (type >= TOPasscodeTypeCustomNumeric);
 
     // Update the visibility of the options button
-    self.optionsButton.hidden = !(state == TOPasscodeSettingsViewStateEnterNewPasscode);
+    
+    if (self.isAppearPasscodeOptions) {
+        self.optionsButton.hidden = !(state == TOPasscodeSettingsViewStateEnterNewPasscode);
+    }
 
     // Clear the input view
     self.inputField.passcode = nil;
@@ -218,7 +230,7 @@ const CGFloat kTOPasscodeKeypadMaxHeight = 330.0f;
     // Update text depending on state
     switch (state) {
         case TOPasscodeSettingsViewStateEnterCurrentPasscode:
-            self.titleLabel.text = NSLocalizedString(@"Enter your passcode", @"");
+            self.titleLabel.text = self.mCurrentPasscodeTitle;
             self.navigationItem.rightBarButtonItem = variableSizePasscode ? self.nextBarButtonItem : nil;
             if (@available(iOS 9.0, *)) {
                 self.inputField.returnKeyType = UIReturnKeyContinue;
@@ -228,7 +240,7 @@ const CGFloat kTOPasscodeKeypadMaxHeight = 330.0f;
             }
             break;
         case TOPasscodeSettingsViewStateEnterNewPasscode:
-            self.titleLabel.text = NSLocalizedString(@"Enter a new passcode", @"");
+            self.titleLabel.text = self.mNewPasscodeTitle;
             self.navigationItem.rightBarButtonItem = variableSizePasscode ? self.nextBarButtonItem : nil;
             if (@available(iOS 9.0, *)) {
                 self.inputField.returnKeyType = UIReturnKeyContinue;
@@ -238,7 +250,7 @@ const CGFloat kTOPasscodeKeypadMaxHeight = 330.0f;
             }
             break;
         case TOPasscodeSettingsViewStateConfirmNewPasscode:
-            self.titleLabel.text = NSLocalizedString(@"Confirm new passcode", @"");
+            self.titleLabel.text = self.mConfirmPasscodeTitle;
             self.navigationItem.rightBarButtonItem = variableSizePasscode ? self.doneBarButtonItem : nil;
             self.inputField.returnKeyType = UIReturnKeyDone;
             break;
@@ -326,7 +338,7 @@ const CGFloat kTOPasscodeKeypadMaxHeight = 330.0f;
     self.containerView.frame = CGRectOffset(self.containerView.frame, self.view.frame.size.width * multiplier, 0.0f);
 
     // Update the options button alpha depending on transition state
-    self.optionsButton.hidden = NO;
+    self.optionsButton.hidden = !self.isAppearPasscodeOptions;
     self.optionsButton.alpha = (state == TOPasscodeSettingsViewStateEnterNewPasscode) ? 0.0f : 1.0f;
 
     // Perform an animation where the snapshot slides off, and the new container slides in
